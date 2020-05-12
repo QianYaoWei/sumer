@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-from ..config import *
+from config import *
 import os
 import jpype
 import datetime as dt
@@ -9,40 +9,58 @@ import json
 if not jpype.isJVMStarted():
     if not os.path.isfile(JVMPath):
         logger.error("java path invalide!")
-    args = list(JVMArgs)
-    if JavaPkg:
-            args.append("-Djava.class.path=" + ";".join(JavaPkg))
+    args = [JVMArgs, ]
 
-    jpype.startJVM(JVMPath, *args)
+    if JavaPkg:
+        args.append("-Djava.class.path=" + ":".join(JavaPkg))
+
+    print(args)
+    jpype.startJVM(JVMPath, *args, convertStrings=False)
 
 
 def db_host():
     return "jdbc:mysql://" + DBHost + ":" + str(DBPort) + "/" + DBName
 
 
-_con = None
+_dbcon = None
 
 
 def db_connection():
-    global _con
-    if _con is None:
+    global _dbcon
+    if _dbcon is None:
         jpckg = jpype.JPackage("java.sql")
-        _con = jpckg.DriverManager.getConnection(db_host(), DBUser, DBPasswd)
-        return _con
+        _dbcon = jpckg.DriverManager.getConnection(db_host(), DBUser, DBPasswd)
+        return _dbcon
     else:
-        return _con
+        return _dbcon
+
+
+_dophinDB4Matlab = None
+
+
+def dolphin():
+    global _dophinDB4Matlab
+    if _dophinDB4Matlab is None:
+        jpckg = jpype.JPackage("clover.epsilon.dolphinDB")
+        _dophinDB4Matlab = jpckg.DophinDB4Matlab(DolphinHost, DolphinPort, DolphinUser, DolphinPassword, DolphinName)
+        return _dophinDB4Matlab
+    else:
+        return _dophinDB4Matlab
+
 
 
 def md_reader(ftype, rtype):
-    # -------------------------------------------
-    # ftype:
-    #     JavaSerialT
-    #     Kryo.IQuotePT
-    #     JavaSerialPT
-    # rtype
-    #     mdreader.SHFE
-    #     mdreader.CFFEX
-    #     mdreader.xxx...
+    '''
+    -------------------------------------------
+    ftype:
+        JavaSerialT
+        Kryo.IQuotePT
+        JavaSerialPT
+    rtype
+        mdreader.SHFE
+        mdreader.CFFEX
+        mdreader.xxx...
+    '''
     return jpype.JPackage("clover.epsilon.util").TestUtils.createMDReader(ftype, rtype)
 
 
@@ -84,12 +102,15 @@ class TimeRange(object):
 
 
 def get_security_db(secList, tr, rtype='JavaSerialPT', ftype='mdreader.SHFE'):
-    # sdt(string)
-    # edt(string)
-    # -------------------------------------------
-    # secs: itr(int) or itr(dict)
-    # tr: TimeRange
-    # interval: millisec (int)
+    '''
+    sdt(string)
+    edt(string)
+    -------------------------------------------
+    secs: itr(int) or itr(dict)
+    tr: TimeRange
+    interval: millisec (int)
+    '''
+
     reader = md_reader(ftype, rtype)
     if secList[0] is int:
         jsecs = jpype.JArray(jpype.JInt)(secList)
