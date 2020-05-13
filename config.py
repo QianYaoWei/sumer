@@ -1,6 +1,8 @@
 # -*- coding:utf-8 -*-
-import logging
 import os
+import logging
+import numpy as np
+import pandas as pd
 
 # ------------------java
 JVMPath = "/usr/java/jdk1.8.0_131/jre/lib/amd64/server/libjvm.so"
@@ -40,7 +42,8 @@ LOGName = 'epsilon.log'
 if logger is None:
     logger = logging.getLogger()
     logger.setLevel(LoggingLevel)
-    fh = logging.FileHandler(LOGPath + LOGName, mode='a')
+    fh = logging.FileHandler(LOGPath + '/' + LOGName, mode='a')
+    fh = logging.FileHandler(LOGName, mode='a')
     formatter = logging.Formatter("%(asctime)s-%(filename)s[%(levelname)s:%(lineno)d]:%(message)s")
     fh.setFormatter(formatter)
     logger.addHandler(fh)
