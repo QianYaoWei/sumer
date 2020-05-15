@@ -8,6 +8,10 @@ _fields = ['tradedate', 'time', 'origtime', 'mtype', 'secid',
         'dfid', 'qmtype', 'bid', 'bsz', 'ask', 'asz', 'lastpx',
         'lastsz', 'lastamt', 'oin', 'ttvol', 'ttamt']
 # 'wmp'
+# 'bid0'
+# 'bsz0'
+# 'ask0'
+# 'asz0'
 
 def qtlist2mx(qtList, depth):
     df = pd.DataFrame(columns=_fields)
@@ -16,9 +20,17 @@ def qtlist2mx(qtList, depth):
 
     for i, v in enumerate(_fields):
         df[v] = afu.getQuoteField(qArray, _fields[i], jpype.JInt(depth))
-    f = lambda e: e[0]
-    df['wmp'] = df.bid.apply(f) + (df.ask.apply(f) - df.bid.apply(f)) * df.bsz.apply(f) / (df.bsz.apply(f) + df.asz.apply(f))
 
+    df.time = pd.to_datetime(df.time, unit='ns');
+    df.origtime = pd.to_datetime(df.origtime, unit='ns');
+
+
+    f = lambda e: e[0]
+    df['bid0'] = df.bid.apply(f)
+    df['bsz0'] = df.bsz.apply(f)
+    df['ask0'] = df.ask.apply(f)
+    df['asz0'] = df.asz.apply(f)
+    df['wmp'] = df.bid0 + (df.ask0 - df.bid0) * df.bsz0 / (df.bsz0 + df.asz0)
     return df
 
 
