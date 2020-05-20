@@ -15,16 +15,16 @@ _fields = ['tradedate', 'time', 'origtime', 'mtype', 'secid',
 
 def qtlist2mx(qtList, depth):
     df = pd.DataFrame(columns=_fields)
-    afu = jpype.JPackage("clover.model.analysisframework").AnalysisFrameworkUtil
+    afu = jpype.JPackage('clover.model.analysisframework').AnalysisFrameworkUtil
     qArray = afu.quoteList2quoteObjArray(qtList, depth)
 
     for i, v in enumerate(_fields):
         df[v] = afu.getQuoteField(qArray, _fields[i], jpype.JInt(depth))
 
-    df.time = pd.to_datetime(df.time, unit='ns');
-    df.origtime = pd.to_datetime(df.origtime, unit='ns');
-
-
+    df.origtime = df.origtime / 1000000
+    # df.time = pd.to_datetime(df.time, unit='ns');
+    # df.origtime = pd.to_datetime(df.origtime, unit='ns');
+    # df.origtime = df.origtime.apply(lambda e: pd.Timestamp(e, unit='ns', tz='Asia/Shanghai'))
     f = lambda e: e[0]
     df['bid0'] = df.bid.apply(f)
     df['bsz0'] = df.bsz.apply(f)
@@ -34,16 +34,29 @@ def qtlist2mx(qtList, depth):
     return df
 
 
-def load_json_raw(fpath, sids, depth, filterOutBadQuotes=True, tradeDate="2020-05-08"):
+
+def fetch_qtlist(reader, sids, tradeDate):
+    #createJsonQuoteCMDReader(jpype.JString('/market_data/json_raw_cn_fut'))
+
+    if sids:
+        sids = jpype.JArray(jpype.JInt)(sids)
+        return reader.getQuoteList(jpype.JString(tradeDate), sids)
+    else:
+        return reader.getQuoteList(jpype.JString(tradeDate))
+
+
+def fetch_qtlist_file(fpath, sids, tradeDate='2020-05-08'):
+
+    '''tradeDate 该字段只用于取到最小变动单位'''
     ids = jpype.JArray(jpype.JInt)([])
     if sids:
         ids = jpype.JArray(jpype.JInt)(sids)
-    mdu = jpype.JPackage("clover.epsilon.marketdata").MarketDataUtil
-    qcList = mdu.jsonRawToQuoteCList(jpype.JString(fpath), ids, jpype.JBoolean(filterOutBadQuotes))
+    mdu = jpype.JPackage('clover.epsilon.marketdata').MarketDataUtil
+    qcList = mdu.jsonRawToQuoteCList(jpype.JString(fpath), ids, jpype.JBoolean(True))
     qtList = mdu.quoteC2quotePT(qcList, db_connection(), jpype.JString(tradeDate))
+    return qtList
 
-    return qtlist2mx(qtList, depth)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     pass

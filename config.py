@@ -25,7 +25,7 @@ DolphinName = "dfs://md_prod"
 
 
 # 行情文件所在目录
-QuoteDir = ""
+QuoteDir = "/home/dev/nas_public/json_raw_tapes/cn_fut/"
 
 # ------------------logging
 logger = None
@@ -39,6 +39,12 @@ LOGPath = os.path.dirname(os.getcwd())
 LOGName = 'epsilon.log'
 
 
+# ------------------sys
+STD_MODEL_CONFIG='/root/.jenkins/workspace/epsilon.epsilon_test_config/java_conf/std_model_config.json'
+TZ='Asia/Shanghai'
+
+
+
 if logger is None:
     logger = logging.getLogger()
     logger.setLevel(LoggingLevel)
@@ -47,3 +53,6 @@ if logger is None:
     formatter = logging.Formatter("%(asctime)s-%(filename)s[%(levelname)s:%(lineno)d]:%(message)s")
     fh.setFormatter(formatter)
     logger.addHandler(fh)
+
+os.environ["STD_MODEL_CONFIG"] = STD_MODEL_CONFIG
+os.environ["TZ"] = TZ

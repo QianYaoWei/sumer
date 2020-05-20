@@ -80,11 +80,11 @@ class TimeRange(object):
         self._edt = edt
 
     @property
-    def edt(self):
+    def inv(self):
         return self._interval
 
     @edt.setter
-    def edt(self, inv):
+    def inv(self, inv):
         self._interval = inv
 
 

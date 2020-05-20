@@ -6,10 +6,14 @@ import pandas as pd
 import plot
 
 
-# mx2 = pd.DataFrame(np.arange(10).reshape(5, 2),  columns=['a', 'b'])
-#mx = epsilon.load_json_raw('/root/tests/MD_CN_FUT_20200430.json', [25899], 5)
-mx = epsilon.load_json_raw('/root/tests/aa.json', [25899, 24164], 5)
-# mx = epsilon.load_json_raw('/root/tests/jj.json', [25899], 5)
+#qt = epsilon.fetch_qtlist_file('/root/tests/aa.json', [25899])
+#mx = epsilon.qtlist2mx(qt, 1)
+
+tu = epsilon.test_utils()
+tu.conn()
+reader = tu.createJsonQuoteCMDReader("/market_data/json_raw_cn_fut");
+qt = epsilon.fetch_qtlist(reader, [26005], '2020-05-18')
+mx = epsilon.qtlist2mx(qt, 1)
 
 #con = epsilon.db_connection()
 #jpkg = jpype.JPackage("clover.model.matlab")

@@ -5,16 +5,18 @@ import jpype
 
 from .db import db_connection, dolphin, md_reader, TimeRange, get_security_db
 
-from .security import qtlist2mx, load_json_raw
+from .security import qtlist2mx, fetch_qtlist, fetch_qtlist_file
 
 
 if not jpype.isJVMStarted():
     if not os.path.isfile(JVMPath):
-        logger.error("java path invalide!")
+        logger.error('java path invalide!')
     args = [JVMArgs, ]
 
     if JavaPkg:
-        args.append("-Djava.class.path=" + ":".join(JavaPkg))
-
-    print(args)
+        args.append('-Djava.class.path=' + ':'.join(JavaPkg))
     jpype.startJVM(JVMPath, *args, convertStrings=False)
+
+
+def test_utils():
+    return jpype.JPackage('clover.epsilon.util').TestUtils
