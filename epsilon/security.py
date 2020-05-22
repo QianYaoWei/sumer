@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
-from . import db_connection
 from config import *
+from . import db_connection
+import json
 import jpype
 
 _fields = ['tradedate', 'time', 'origtime', 'mtype', 'secid',
@@ -55,6 +56,22 @@ def fetch_qtlist_file(fpath, sids, tradeDate='2020-05-08'):
     qcList = mdu.jsonRawToQuoteCList(jpype.JString(fpath), ids, jpype.JBoolean(True))
     qtList = mdu.quoteC2quotePT(qcList, db_connection(), jpype.JString(tradeDate))
     return qtList
+
+
+def get_sec_objs(secs, tradeDate='2020-05-08'):
+    '''
+        secs-> [
+            {"SecurityExchange": "DCE", "Symbol": "p", "MaturitySequence": "+1"},
+            {"SecurityExchange": "CFFEX", "Symbol": "IF", "MaturityMonthYear": "201705"}
+        ]
+    '''
+    util = jpype.JPackage('clover.model.util')
+    mu = util.ModelUtils
+
+    return [mu.parseSecurity(db_connection(),\
+            jpype.JString(tradeDate),\
+            util.Json.parse(json.dumps(s)))\
+            for s in secs]
 
 
 

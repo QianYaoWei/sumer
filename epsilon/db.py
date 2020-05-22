@@ -88,7 +88,7 @@ class TimeRange(object):
         self._interval = inv
 
 
-def get_security_db(secList, tr, rtype='JavaSerialPT', ftype='mdreader.SHFE'):
+def get_quote_db(secs, tr, rtype='JavaSerialPT', ftype='mdreader.SHFE'):
     '''
     sdt(string)
     edt(string)
@@ -98,10 +98,10 @@ def get_security_db(secList, tr, rtype='JavaSerialPT', ftype='mdreader.SHFE'):
     interval: millisec (int)
     '''
     reader = md_reader(ftype, rtype)
-    if secList[0] is int:
-        jsecs = jpype.JArray(jpype.JInt)(secList)
-    elif secList[0] is dict:
-        jsecs = [json.dumps(s) for s in secList]
+    if secs[0] is int:
+        jsecs = jpype.JArray(jpype.JInt)(secs)
+    elif secs[0] is dict:
+        jsecs = [json.dumps(s) for s in secs]
         jsecs = jpype.JArray(jpype.JString)(jsecs)
     else:
         return None
