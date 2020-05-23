@@ -35,28 +35,34 @@ def dolphin():
 
 
 
-def md_reader(ftype, rtype):
-    '''
-    -------------------------------------------
-    ftype:
-        JavaSerialT
-        Kryo.IQuotePT
-        JavaSerialPT
-    rtype
-        mdreader.SHFE
-        mdreader.CFFEX
-        mdreader.xxx...
-    '''
-    return jpype.JPackage("clover.epsilon.util").TestUtils.createMDReader(ftype, rtype)
+#def md_reader(ftype, rtype):
+#    '''
+#    -------------------------------------------
+#    ftype:
+#        JavaSerialT
+#        Kryo.IQuotePT
+#        JavaSerialPT
+#    rtype
+#        mdreader.SHFE
+#        mdreader.CFFEX
+#        mdreader.xxx...
+#    '''
+#    return jpype.JPackage("clover.epsilon.util").TestUtils.createMDReader(ftype, rtype)
 
 
 
 class TimeRange(object):
     def __init__(self):
         # startdate
-        self._sdt = dt.date.today() - dt.timedelta(1)
+        self._sdt = None
+        # self._sdt = dt.date.today() - dt.timedelta(1)
+
         # enddate
-        self._edt = dt.date.today()
+        self._edt = None
+        # self._edt = dt.date.today()
+
+        self._day = -1
+
         # tick interval
         self._interval = 500
 
@@ -80,15 +86,23 @@ class TimeRange(object):
         self._edt = edt
 
     @property
+    def day(self):
+        return self._day
+
+    @day.setter
+    def day(self, day):
+        self._day = day
+
+    @property
     def inv(self):
         return self._interval
 
-    @edt.setter
+    @inv.setter
     def inv(self, inv):
         self._interval = inv
 
 
-def get_quote_db(secs, tr, rtype='JavaSerialPT', ftype='mdreader.SHFE'):
+def get_quote_db(secs, tr, reader):
     '''
     sdt(string)
     edt(string)
@@ -97,21 +111,28 @@ def get_quote_db(secs, tr, rtype='JavaSerialPT', ftype='mdreader.SHFE'):
     tr: TimeRange
     interval: millisec (int)
     '''
-    reader = md_reader(ftype, rtype)
-    if secs[0] is int:
+    if type(secs[0]) == int:
         jsecs = jpype.JArray(jpype.JInt)(secs)
-    elif secs[0] is dict:
+    elif type(secs[0]) == dict:
         jsecs = [json.dumps(s) for s in secs]
         jsecs = jpype.JArray(jpype.JString)(jsecs)
     else:
         return None
 
-    sdt = jpype.JString(tr.sdt.strftime("%Y-%m-%d"))
-    edt = jpype.JString(tr.edt.strftime("%Y-%m-%d"))
     jpkg = jpype.JPackage("clover.model.matlab")
     sdm = jpkg.SecurityDataMatrixPT()
-    rets = jpkg.SecurityDataMatrixPT.generateSDMDataDef_CN(db_connection(), jsecs, sdt, edt, jpype.JInt(tr.inv))
-    sdm.fetchData(rets, reader, tr.inv)
+    if tr.sdt and tr.edt:
+        sdt = jpype.JString(tr.sdt.strftime("%Y-%m-%d"))
+        edt = jpype.JString(tr.edt.strftime("%Y-%m-%d"))
+        inv = jpype.JInt(tr.inv)
+        rets = jpkg.SecurityDataMatrixPT.generateSDMDataDef_CN(db_connection(), jsecs, sdt, edt, inv)
+        sdm.fetchData(rets, reader, tr.inv)
+    elif tr.edt and tr.day < 0:
+        day = jpype.JInt(tr.day)
+        edt = jpype.JString(tr.edt.strftime("%Y-%m-%d"))
+        inv = jpype.JInt(tr.inv)
+        rets = jpkg.SecurityDataMatrixPT.generateSDMDataDef_CN(db_connection(), jsecs, day, edt, inv)
+        sdm.fetchData(rets, reader, tr.inv)
     return sdm
 
 

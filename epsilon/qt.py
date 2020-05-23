@@ -2,17 +2,10 @@
 # -*- coding:utf-8 -*-
 from config import *
 from . import db_connection
-import json
-import jpype
 
 _fields = ['tradedate', 'time', 'origtime', 'mtype', 'secid',
-        'dfid', 'qmtype', 'bid', 'bsz', 'ask', 'asz', 'lastpx',
-        'lastsz', 'lastamt', 'oin', 'ttvol', 'ttamt']
-# 'wmp'
-# 'bid0'
-# 'bsz0'
-# 'ask0'
-# 'asz0'
+            'dfid', 'qmtype', 'bid', 'bsz', 'ask', 'asz', 'lastpx',
+            'lastsz', 'lastamt', 'oin', 'ttvol', 'ttamt']
 
 def qtlist2mx(qtList, depth):
     df = pd.DataFrame(columns=_fields)
@@ -32,13 +25,14 @@ def qtlist2mx(qtList, depth):
     df['ask0'] = df.ask.apply(f)
     df['asz0'] = df.asz.apply(f)
     df['wmp'] = df.bid0 + (df.ask0 - df.bid0) * df.bsz0 / (df.bsz0 + df.asz0)
+
+    df.index = df.origtime
     return df
 
 
 
 def fetch_qtlist(reader, sids, tradeDate):
     #createJsonQuoteCMDReader(jpype.JString('/market_data/json_raw_cn_fut'))
-
     if sids:
         sids = jpype.JArray(jpype.JInt)(sids)
         return reader.getQuoteList(jpype.JString(tradeDate), sids)
