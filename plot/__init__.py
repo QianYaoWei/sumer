@@ -1,27 +1,41 @@
 # -*- coding:utf-8 -*-
-import qt
+from .pt import pt
 
-import sdm
+from .sdm import sdm
 
+from config import *
+from .util import *
+
+import util
 import matplotlib.pyplot as plt
 from matplotlib.ticker import Formatter
 
 
-class Timestamp2DateTime(Formatter):
-    def __init__(self):
-        pass
+def sdm_scatter(sec, y):
+    sessions = np.unique(sec.ssid)
 
-    def __call__(self, x, pos=0):
-        td = dt.datetime.fromtimestamp(x/1000)
-        t = dt.time(td.hour, td.minute, td.second)
-        return t.strftime('%H:%M:%S.%s')
+    fig = plt.figure()
+    plt.subplots_adjust(wspace=0, hspace=0)
+    for i in range(len(sessions)):
+        ax = plt.subplot(1, len(sessions), i + 1)
+        xl = sec.tms[sec.ssid == sessions[i]]
+        ax.scatter(xl, sec[y][xl], s=1, label=y)
+        ax.set_label(y)
+
+        plt.xticks(rotation=270)
+
+        if i != 0:
+            #ax.set_yticks([])
+            ax.get_yaxis().set_visible(False)
+            ax.spines['left'].set_visible(False)
 
 
-class Tick2Price(Formatter):
-    def __init__(self, incr):
-        self.incr = incr
+        # 只在最后一张图上加legend
+        if i == len(sessions) - 1:
+            ax.legend()
 
+        # 调整刻度数据显示
+        ax.xaxis.set_major_formatter(Timestamp2DateTime())
+        # ax.yaxis.set_major_formatter(Tick2Price(incrPrice))
 
-    def __call__(self, x, pos=0):
-        return x * self.incr
-
+    plt.show()

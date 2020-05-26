@@ -1,12 +1,16 @@
 # -*- coding:utf-8 -*-
 from config import *
+from .util import *
+
 import util
+import matplotlib.pyplot as plt
+from matplotlib.ticker import Formatter
 
 
-def security_tick(sec, yList, incrPrice=1, rate=None):
+def pt(sec, yList, incrPrice=1, rate=None):
     '''
     usage example:
-    security_tick(sec, ['bid0', 'wmp', 'ask0'])
+        pt(sec, ['bid0', 'wmp', 'ask0'])
     '''
     orig = sec.origtime.apply(lambda t: util.is_trading_time(t))
     sessions = [i for i in range(util.trading_phases()) if (orig == i).sum() > 0 ]

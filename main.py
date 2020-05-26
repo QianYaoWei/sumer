@@ -3,8 +3,9 @@ import epsilon
 import jpype
 import numpy as np
 import pandas as pd
-import plot
 import datetime as dt
+
+import plot
 
 
 #secs = [{"SecurityExchange": "SHFE", "Symbol": "fu", "MaturityMonthYear": "202009"
@@ -12,7 +13,7 @@ import datetime as dt
 
 secs = [
     {"SecurityExchange": "SHFE", "Symbol": "au", "MaturityMonthYear": "202012" },
-    {"SecurityExchange": "SHFE", "Symbol": "fu", "MaturityMonthYear": "202009" }
+    #{"SecurityExchange": "SHFE", "Symbol": "fu", "MaturityMonthYear": "202009" }
 ]
 
 
