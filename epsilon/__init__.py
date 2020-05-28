@@ -1,10 +1,6 @@
 # -*- coding:utf-8 -*-
 from config import *
 import os
-import db
-import model
-import pt
-import sdm
 
 
 

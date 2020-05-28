@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 from config import *
-from . import db_connection
+from ..db import db_connection
 
 _fields = ['tradedate', 'time', 'origtime', 'mtype', 'secid',
             'dfid', 'qmtype', 'bid', 'bsz', 'ask', 'asz', 'lastpx',
