@@ -1,8 +1,7 @@
 # -*- coding:utf-8 -*-
 from config import *
-from .util import *
+from ..util import *
 
-import util
 import matplotlib.pyplot as plt
 from matplotlib.ticker import Formatter
 
@@ -12,8 +11,8 @@ def pt(sec, yList, incrPrice=1, rate=None):
     usage example:
         pt(sec, ['bid0', 'wmp', 'ask0'])
     '''
-    orig = sec.origtime.apply(lambda t: util.is_trading_time(t))
-    sessions = [i for i in range(util.trading_phases()) if (orig == i).sum() > 0 ]
+    orig = sec.origtime.apply(lambda t: is_trading_time(t))
+    sessions = [i for i in range(trading_phases()) if (orig == i).sum() > 0 ]
 
     fig = plt.figure()
     plt.subplots_adjust(wspace=0, hspace=0)
@@ -63,7 +62,7 @@ def lastsz_totalvol(sec, interval=500):
     '''
     interval->milli second
     '''
-    index = sec['origtime'].apply(lambda t: util.is_trading_time(t) != -1)
+    index = sec['origtime'].apply(lambda t: is_trading_time(t) != -1)
     orig = sec['origtime'][index]
 
     min = orig.min()
@@ -124,5 +123,5 @@ def lastsz_totalvol(sec, interval=500):
 
 
 if __name__ == '__main__':
-    print(util.is_trading_time(1589765734000))
+    print(is_trading_time(1589765734000))
 

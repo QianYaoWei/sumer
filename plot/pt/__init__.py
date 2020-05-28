@@ -1,5 +1,3 @@
 # -*- coding:utf-8 -*-
 
-import pt
-
-import sdm
+from .pt import pt

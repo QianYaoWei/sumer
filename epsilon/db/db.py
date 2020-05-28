@@ -1,8 +1,5 @@
 # -*- coding:utf-8 -*-
 from config import *
-import json
-import datetime as dt
-import jpype
 
 def db_host():
     return "jdbc:mysql://" + DBHost + ":" + str(DBPort) + "/" + DBName

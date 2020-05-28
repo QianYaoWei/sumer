@@ -1,13 +1,11 @@
 # -*- coding:utf-8 -*-
 from config import *
 import os
-import jpype
+import db
+import model
+import pt
+import sdm
 
-from .db import db_connection, dolphin, TimeRange, get_quote_db
-
-from .qt import qtlist2mx, fetch_qtlist, fetch_qtlist_file, get_sec_objs
-
-from .sdm import get_index_by_secid, sdm2mx
 
 
 if not jpype.isJVMStarted():

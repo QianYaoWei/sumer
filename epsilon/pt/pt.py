@@ -7,10 +7,10 @@ _fields = ['tradedate', 'time', 'origtime', 'mtype', 'secid',
             'dfid', 'qmtype', 'bid', 'bsz', 'ask', 'asz', 'lastpx',
             'lastsz', 'lastamt', 'oin', 'ttvol', 'ttamt']
 
-def qtlist2mx(qtList, depth):
+def ptlist2mx(ptList, depth):
     df = pd.DataFrame(columns=_fields)
     afu = jpype.JPackage('clover.model.analysisframework').AnalysisFrameworkUtil
-    qArray = afu.quoteList2quoteObjArray(qtList, depth)
+    qArray = afu.quoteList2quoteObjArray(ptList, depth)
 
     for i, v in enumerate(_fields):
         df[v] = afu.getQuoteField(qArray, _fields[i], jpype.JInt(depth))
@@ -31,7 +31,7 @@ def qtlist2mx(qtList, depth):
 
 
 
-def fetch_qtlist(reader, sids, tradeDate):
+def fetch_ptlist(reader, sids, tradeDate):
     #createJsonQuoteCMDReader(jpype.JString('/market_data/json_raw_cn_fut'))
     if sids:
         sids = jpype.JArray(jpype.JInt)(sids)
@@ -40,7 +40,7 @@ def fetch_qtlist(reader, sids, tradeDate):
         return reader.getQuoteList(jpype.JString(tradeDate))
 
 
-def fetch_qtlist_file(fpath, sids, tradeDate='2020-05-08'):
+def fetch_ptlist_file(fpath, sids, tradeDate='2020-05-08'):
 
     '''tradeDate 该字段只用于取到最小变动单位'''
     ids = jpype.JArray(jpype.JInt)([])
@@ -48,8 +48,8 @@ def fetch_qtlist_file(fpath, sids, tradeDate='2020-05-08'):
         ids = jpype.JArray(jpype.JInt)(sids)
     mdu = jpype.JPackage('clover.epsilon.marketdata').MarketDataUtil
     qcList = mdu.jsonRawToQuoteCList(jpype.JString(fpath), ids, jpype.JBoolean(True))
-    qtList = mdu.quoteC2quotePT(qcList, db_connection(), jpype.JString(tradeDate))
-    return qtList
+    ptList = mdu.quoteC2quotePT(qcList, db_connection(), jpype.JString(tradeDate))
+    return ptList
 
 
 def get_sec_objs(secs, tradeDate='2020-05-08'):
