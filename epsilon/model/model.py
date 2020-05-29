@@ -90,5 +90,8 @@ class Convertor(object):
 
 
 def model2mx(c):
-    afum = jpype.JPackage("clover.model.analysisframework").AnalysisFrameworkUtilMT
-    return afum.modelList2table2(c.jmodelList, c.jdepth, c.jinclQuote, c.jonlyQuoteWithOrders, c.jnThreads)
+    if isinstance(c, Convertor):
+        afum = jpype.JPackage("clover.model.analysisframework").AnalysisFrameworkUtilMT
+        return afum.modelList2table2(c.jmodelList, c.jdepth, c.jinclQuote, c.jonlyQuoteWithOrders, c.jnThreads)
+
+    return None

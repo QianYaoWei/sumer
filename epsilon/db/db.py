@@ -116,6 +116,9 @@ def get_quote_db(secs, tr, reader):
     else:
         return None
 
+    if not isinstance(tr, TimeRange):
+        return None
+
     jpkg = jpype.JPackage("clover.model.matlab")
     sdm = jpkg.SecurityDataMatrixPT()
     if tr.sdt and tr.edt:
