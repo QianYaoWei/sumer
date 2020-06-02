@@ -10,13 +10,20 @@ import datetime as dt
 # ------------------java
 JVMPath = "/usr/java/jdk1.8.0_131/jre/lib/amd64/server/libjvm.so"
 JVMArgs = "-ea"
-JavaPkg = ["/root/.jenkins/workspace/model-jar-with-dependencies.jar","/root/.jenkins/workspace/epsilon-jar-with-dependencies.jar"]
+JavaPkg = ["/root/tests/sumer/.git/model-jar-with-dependencies.jar","/root/tests/sumer/.git/epsilon-jar-with-dependencies.jar"]
+
 # ------------------mysql
-DBHost = "192.168.10.11"
-DBPort = 3309
-DBName = "epsilon"
-DBUser = "epsilon"
-DBPasswd = "epsilon7777"
+# DBHost = "192.168.10.11"
+# DBPort = 3309
+# DBName = "epsilon"
+# DBUser = "epsilon"
+# DBPasswd = "epsilon7777"
+
+DBHost = "127.0.0.1"
+DBPort = 3306
+DBName = "sumer"
+DBUser = "root"
+DBPasswd = "root1234"
 
 
 # ------------------dolphinDB
@@ -59,3 +66,7 @@ if logger is None:
 
 os.environ["STD_MODEL_CONFIG"] = STD_MODEL_CONFIG
 os.environ["TZ"] = TZ
+
+
+#import imp
+#imp.reload(xxx))

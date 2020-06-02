@@ -1,12 +1,7 @@
 # -*- coding:utf-8 -*-
+from config import *
 import epsilon
 from epsilon import db, pt, sdm
-
-import jpype
-import numpy as np
-import pandas as pd
-import datetime as dt
-
 import plot
 
 

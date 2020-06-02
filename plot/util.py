@@ -45,9 +45,3 @@ def is_trading_time(x):
             return i
 
     return -1
-
-
-
-
-#import imp
-#imp.reload(plot))
