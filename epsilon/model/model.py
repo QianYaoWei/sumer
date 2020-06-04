@@ -144,6 +144,16 @@ def model2mx(c):
     if isinstance(c, Convertor):
         afum = jpype.JPackage("clover.model.analysisframework").AnalysisFrameworkUtilMT
         tbl = afum.modelList2table2(c.jmodelList, c.jdepth, c.jinclQuote, c.jonlyQuoteWithOrders, c.jnThreads)
-        return (sec2mx(tbl.t_sec), order2mx(tbl.t_ord), msg2mx(tbl.t_msg))
+
+        smx = sec2mx(tbl.t_sec)
+
+        omx = order2mx(tbl.t_ord)
+        # 为了兼容, 这里索引从1开始
+        omx.index = np.arange(1, len(omx) + 1)
+
+        mx = msg2mx(tbl.t_msg)
+        # 为了兼容, 这里索引从1开始
+        mx.index = np.arange(1, len(mx) + 1)
+        return (smx, omx, mx)
 
     return None
