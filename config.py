@@ -10,7 +10,7 @@ import datetime as dt
 # ------------------java
 JVMPath = "/usr/java/jdk1.8.0_131/jre/lib/amd64/server/libjvm.so"
 JVMArgs = "-ea"
-JavaPkg = ["/root/tests/sumer/.git/model-jar-with-dependencies.jar","/root/tests/sumer/.git/epsilon-jar-with-dependencies.jar"]
+JavaPkg = ["/root/gitsrc/sumer/.git/model-jar-with-dependencies.jar","/root/gitsrc/sumer/.git/epsilon-jar-with-dependencies.jar"]
 
 # ------------------mysql
 # DBHost = "192.168.10.11"
@@ -50,7 +50,8 @@ LOGName = 'epsilon.log'
 
 
 # ------------------sys
-STD_MODEL_CONFIG='/root/.jenkins/workspace/epsilon.epsilon_test_config/java_conf/std_model_config.json'
+# STD_MODEL_CONFIG='/root/.jenkins/workspace/epsilon.epsilon_test_config/java_conf/std_model_config.json'
+STD_MODEL_CONFIG='/root/gitsrc/sumer/std_model_config.json'
 TZ='Asia/Shanghai'
 
 
