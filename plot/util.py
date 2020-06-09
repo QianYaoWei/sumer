@@ -4,11 +4,12 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import Formatter
 
 class Timestamp2DateTime(Formatter):
-    def __init__(self):
+    def __init__(self, div=10**3):
+        self.div = div
         pass
 
     def __call__(self, x, pos=0):
-        td = dt.datetime.fromtimestamp(x/1000)
+        td = dt.datetime.fromtimestamp(x/self.div)
         t = dt.time(td.hour, td.minute, td.second)
         return t.strftime('%H:%M:%S.%s')
 
@@ -37,7 +38,7 @@ def trading_phases():
 
 
 def is_trading_time(x):
-    td = dt.datetime.fromtimestamp(x/1000)
+    td = dt.datetime.fromtimestamp(x)
     t = dt.time(td.hour, td.minute, td.second)
 
     for i, v in enumerate(__tradingTime):

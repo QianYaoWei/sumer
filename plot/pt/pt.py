@@ -11,7 +11,7 @@ def pt(sec, yList, incrPrice=1, rate=None):
     usage example:
         pt(sec, ['bid0', 'wmp', 'ask0'])
     '''
-    orig = sec.origtime.apply(lambda t: is_trading_time(t))
+    orig = sec.origtime.apply(lambda t: is_trading_time(t/1000))
     sessions = [i for i in range(trading_phases()) if (orig == i).sum() > 0 ]
 
     fig = plt.figure()
@@ -62,7 +62,7 @@ def lastsz_totalvol(sec, interval=500):
     '''
     interval->milli second
     '''
-    index = sec['origtime'].apply(lambda t: is_trading_time(t) != -1)
+    index = sec['origtime'].apply(lambda t: is_trading_time(t/1000) != -1)
     orig = sec['origtime'][index]
 
     min = orig.min()
@@ -123,5 +123,6 @@ def lastsz_totalvol(sec, interval=500):
 
 
 if __name__ == '__main__':
-    print(is_trading_time(1589765734000))
+    # print(is_trading_time(1589765734000))
+    pass
 

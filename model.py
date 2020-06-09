@@ -39,7 +39,15 @@ reader = tu.dolphinDBReader();
 m.recoverQuoteData(reader, mi.tradeDate)
 smx, omx, mx = model.model2mx(c)
 
-# tbl = model.model2mx(c)
+
+nos = model.nosmx(omx, mx)
+
+oc = model.ocmx(omx, mx)
+
+plot.model(nos, oc)
+
+# profit = model.netProfit(mx, 1000)
+# nos, oc = plot.model(smx, omx, mx)
 
 
 

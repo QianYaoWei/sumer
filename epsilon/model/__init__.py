@@ -1,10 +1,6 @@
 # -*- coding:utf-8 -*-
 
-from .model import ModelInfo,\
-        recoverModel,\
-        Convertor,\
-        model2mx,\
-        queryModelConfiguration
+from .model import *
 
 from .msg import msg
 msg2mx = msg.msg2mx

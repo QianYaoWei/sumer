@@ -58,10 +58,18 @@ class msg(object):
 
         # if includeQuote is True
         # these fields will be rewriten by quote.quote2df
+        # =========================
         df['bid'] = np.array(msg.bid[0])
         df['bsz'] = np.array(msg.bsz[0])
         df['ask'] = np.array(msg.ask[0])
         df['asz'] = np.array(msg.asz[0])
+        df['wmp'] = df.bid + (df.ask - df.bid) * df.bsz / (df.bsz + df.asz)
+
+        df['tradedate'] = np.array(msg.tradedate)
+        df['time'] = np.array(msg.time)
+        df['mtype'] = np.array(msg.mtype)
+        df['msn'] = np.array(msg.msn)
+        # =========================
 
 
     @classmethod

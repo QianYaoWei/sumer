@@ -1,0 +1,11 @@
+时间戳转dt
+    dt.datetime.fromtimestamp(t)
+
+字符串转dt
+    dt.datetime.fromisoformat('XX-XX-XX XX:XX:XX.XXX')
+
+dt转时间戳
+    dt.datatime.timestamp()
+
+dt转字符串
+    dt.datatime.strftime("%Y-%M-%d %H:%m:%S.%s")

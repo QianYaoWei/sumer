@@ -163,3 +163,42 @@ def model2mx(c):
         return (smx, omx, mx)
 
     return None
+
+
+def nosmx(omx, mx):
+    orderMX = omx[omx.ordid >= 0]
+    nos = pd.DataFrame(columns=["ordid", "side", "poseff", "price", "qty", "time", "executed", "wmp"])
+
+    nos["ordid"] = orderMX.ordid
+    nos["side"] = orderMX.side
+    nos["poseff"] = orderMX.poseff
+    nos["price"] = orderMX.price
+    nos["qty"] = orderMX.qty
+    nos["executed"] = orderMX.executed
+    oids = orderMX.reqs.apply(lambda e: e[0])
+    nos["time"] = mx.loc[oids].time.values
+    nos["wmp"] = mx.loc[oids].wmp.values
+    return nos
+
+
+def ocmx(omx, mx):
+    orderMX = omx[omx.ordid >= 0]
+    oc = pd.DataFrame(columns=["ordid", "time", "wmp"])
+
+    cfilter = orderMX.reqs.apply(lambda e: len(e) >= 2)
+    cids = orderMX.loc[cfilter].reqs.apply(lambda e: e[1])
+    oc["ordid"] = orderMX.loc[cfilter].ordid
+    oc["time"] = mx.loc[cids].time.values
+    oc["wmp"] = mx.loc[cids].wmp.values
+    return oc
+
+
+def netProfit(mx, px):
+    fillMX = mx[mx.fillpx > 0]
+
+    netPos = fillMX.poschg.sum()
+    posValue = netPos * px
+
+    commission = fillMX.comm.sum()
+    return posValue - (fillMX.poschg * fillMX.fillpx).sum() - commission
+
