@@ -15,10 +15,10 @@ class quote(object):
             'origtime',
             'dfid',
             'qmtype',
-            'bid',
-            'bsz',
-            'ask',
-            'asz',
+            'bid0',
+            'bsz0',
+            'ask0',
+            'asz0',
             'lastpx',
             'lastsz',
             'lastamt',
@@ -48,10 +48,14 @@ class quote(object):
         df['origtime'] = np.array(quote.origtime)
         df['dfid'] = np.array(quote.dfid)
         df['qmtype'] = np.array(quote.qmtype)
-        df['bid'] = np.array(quote.bid[0])
-        df['bsz'] = np.array(quote.bsz[0])
-        df['ask'] = np.array(quote.ask[0])
-        df['asz'] = np.array(quote.asz[0])
+        df.qmtype = df.qmtype.apply(lambda e: chr(e))
+
+
+        df['bid0'] = np.array(quote.bid[0])
+        df['bsz0'] = np.array(quote.bsz[0])
+        df['ask0'] = np.array(quote.ask[0])
+        df['asz0'] = np.array(quote.asz[0])
+        df['wmp'] = df.bid0 + (df.ask0 - df.bid0) * df.bsz0 / (df.bsz0 + df.asz0)
 
         df['lastpx'] = np.array(quote.lastpx)
         df['lastsz'] = np.array(quote.lastsz)

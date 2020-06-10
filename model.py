@@ -24,7 +24,6 @@ m = model.recoverModel(mi)
 c = model.Convertor()
 c.addModel(m)
 c.inclQuote = False
-# c.inclQuote = True 
 c.onlyQuoteWithOrders = False
 c.nThreads = 1
 
@@ -32,19 +31,28 @@ tu = epsilon.test_utils()
 tu.conn()
 # reader = tu.createJsonQuoteCMDReader("/market_data/json_raw_cn_fut");
 reader = tu.dolphinDBReader();
-# ids = [s.getSecurityID() for s in m.getTableSecurity()]
-# ptList = pt.fetch_ptlist(reader, ids, '2020-06-03')
-# for q in ptList:
-#     m.__processQuote(q)
+
 m.recoverQuoteData(reader, mi.tradeDate)
 smx, omx, mx = model.model2mx(c)
 
+ids = [s.getSecurityID() for s in m.getTableSecurity()]
 
-nos = model.nosmx(omx, mx)
+# ptmx = mx[(mx.qmtype == 'F') & (mx.secid == ids[0])]
 
-oc = model.ocmx(omx, mx)
+# ptList = pt.fetch_ptlist(reader, ids[0:1], '2020-06-03')
 
-plot.model(nos, oc)
+itr = m.getQuote(ids[0])
+ptList = jpype.java.util.ArrayList()
+while itr.hasNext():
+    ptList.add(itr.next())
+
+ptmx = pt.ptlist2mx(ptList, 1)
+
+nosmx = model.nosmx(omx, mx)
+
+ocmx = model.ocmx(omx, mx)
+
+plot.model(nosmx, ocmx, ptmx)
 
 # profit = model.netProfit(mx, 1000)
 # nos, oc = plot.model(smx, omx, mx)

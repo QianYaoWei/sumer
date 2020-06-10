@@ -201,4 +201,3 @@ def netProfit(mx, px):
 
     commission = fillMX.comm.sum()
     return posValue - (fillMX.poschg * fillMX.fillpx).sum() - commission
-

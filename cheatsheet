@@ -9,3 +9,7 @@ dt转时间戳
 
 dt转字符串
     dt.datatime.strftime("%Y-%M-%d %H:%m:%S.%s")
+
+
+pd统计某字段各值的数量
+    mx.groupby('mtype').mtype.sum()

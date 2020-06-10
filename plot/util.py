@@ -23,10 +23,10 @@ class Tick2Price(Formatter):
 
 
 __tradingTime = [
-        [dt.time(21, 00, 0), dt.time(23, 00, 0)],
+        # [dt.time(21, 00, 0), dt.time(23, 00, 0)],
         [dt.time( 9,  0, 0), dt.time(10, 15, 0)],
-        [dt.time(10, 30, 0), dt.time(11, 30, 0)],
-        [dt.time(13,  0, 0), dt.time(15, 00, 0)],
+        # [dt.time(10, 30, 0), dt.time(11, 30, 0)],
+        # [dt.time(13,  0, 0), dt.time(15, 00, 0)],
 
 
         #[dt.time( 9, 0, 0), dt.time(9, 1, 0)],
