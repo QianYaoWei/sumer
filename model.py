@@ -14,9 +14,9 @@ mi.modelID = 'SHFE.zn'
 # mi.configFile = 'test.json'
 
 
-mc = model.queryModelConfiguration(mi.jtradeDate, mi.jserverID, mi.jclientID)
-with open('test.json',  'w') as f1:
-    f1.write(str(mc.toString()))
+# mc = model.queryModelConfiguration(mi.jtradeDate, mi.jserverID, mi.jclientID)
+# with open('test.json',  'w') as f1:
+#     f1.write(str(mc.toString()))
 
 
 # amc = mi.jAbstractMC
@@ -32,25 +32,24 @@ tu.conn()
 # reader = tu.createJsonQuoteCMDReader("/market_data/json_raw_cn_fut");
 reader = tu.dolphinDBReader();
 
-m.recoverQuoteData(reader, mi.tradeDate)
+m.recoverQuoteData(reader, mi.jtradeDate)
 smx, omx, mx = model.model2mx(c)
 
 ids = [s.getSecurityID() for s in m.getTableSecurity()]
-
-# ptmx = mx[(mx.qmtype == 'F') & (mx.secid == ids[0])]
-
-# ptList = pt.fetch_ptlist(reader, ids[0:1], '2020-06-03')
-
+# 
+# # ptmx = mx[(mx.qmtype == 'F') & (mx.secid == ids[0])]
+# # ptList = pt.fetch_ptlist(reader, ids[0:1], '2020-06-03')
+# 
 itr = m.getQuote(ids[0])
 ptList = jpype.java.util.ArrayList()
 while itr.hasNext():
     ptList.add(itr.next())
 
-ptmx = pt.ptlist2mx(ptList, 1)
-
 nosmx = model.nosmx(omx, mx)
 
 ocmx = model.ocmx(omx, mx)
+
+ptmx = pt.ptlist2mx(ptList, 1)
 
 plot.model(nosmx, ocmx, ptmx)
 
