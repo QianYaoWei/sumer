@@ -193,11 +193,11 @@ def ocmx(omx, mx):
     return oc
 
 
-def netProfit(mx, px):
-    fillMX = mx[mx.fillpx > 0]
-
+def netProfit(mx, sec, px=0):
+    
+    fillMX = mx[(mx.fillpx > 0) & (mx.ordid >= 0)]
     netPos = fillMX.poschg.sum()
     posValue = netPos * px
 
     commission = fillMX.comm.sum()
-    return posValue - (fillMX.poschg * fillMX.fillpx).sum() - commission
+    return posValue - (sec.multiplier * sec.minpxincr) * (fillMX.poschg * fillMX.fillpx).sum() - commission
