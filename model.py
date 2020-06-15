@@ -9,11 +9,11 @@ mi = model.ModelInfo()
 # mi.tradeDate = '2020-05-29'
 mi.tradeDate = '2020-06-03'
 mi.serverID = 40
-mi.clientID = 58
-mi.modelID = 'SHFE.zn'
+# mi.clientID = 58
+# mi.modelID = 'SHFE.zn'
 
-# mi.clientID = 56
-# mi.modelID = 'SHFE.pb'
+mi.clientID = 56
+mi.modelID = 'SHFE.pb'
 # mi.configFile = 'test.json'
 
 
@@ -54,7 +54,7 @@ ocmx = model.ocmx(omx, mx)
 
 ptmx = pt.ptlist2mx(ptList, 1)
 
-# plot.model(nosmx, ocmx, ptmx)
+plot.model(nosmx, ocmx, ptmx)
 
 profit = model.netProfit(mx, smx[smx.secid == ids[0]])
 

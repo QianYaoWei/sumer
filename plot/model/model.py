@@ -12,6 +12,8 @@ def model(nosmx, ocmx, ptmx=None):
     nosTime = nosmx.time.apply(lambda t: is_trading_time(t/10**9))
     nosSessions = [i for i in range(trading_phases()) if (nosTime == i).sum() > 0 ]
 
+    ocTime = ocmx.time.apply(lambda t: is_trading_time(t/10**9))
+
     ptTime = ptmx.time.apply(lambda t: is_trading_time(t/10**9)) \
             if ptmx is not None else None
     # ptSessions = [i for i in range(trading_phases()) if (nosTime == i).sum() > 0] \
@@ -22,27 +24,46 @@ def model(nosmx, ocmx, ptmx=None):
     for i in range(N):
         ax = plt.subplot(1, N, i + 1)
 
-        bf = (nosTime == nosSessions[i]) & (nosmx.side == 1)
+        obf = (nosTime == nosSessions[i]) & (nosmx.side == 1) & (nosmx.poseff == 'O')
         for j in range(len(_marker)):
             mf = (nosmx.ordid % len(_marker) == j)
-            xl = nosmx.time[bf & mf]
-            yl = nosmx.price[bf & mf]
-            ax.scatter(xl, yl, s=15, c='r', marker=_marker[j])
+            xl = nosmx.time[obf & mf]
+            yl = nosmx.price[obf & mf]
+            ax.scatter(xl, yl, s=20, c='r', marker=_marker[j])
 
-
-        sf = (nosTime == nosSessions[i]) & (nosmx.side == -1)
+        fbf = (nosTime == nosSessions[i]) & (nosmx.side == 1) & (nosmx.poseff == 'T')
         for j in range(len(_marker)):
             mf = (nosmx.ordid % len(_marker) == j)
-            xl = nosmx.time[sf & mf]
-            yl = nosmx.price[sf & mf]
-            ax.scatter(xl, yl, s=15, c='g', marker=_marker[j])
+            xl = nosmx.time[fbf & mf]
+            yl = nosmx.price[fbf & mf]
+            ax.scatter(xl, yl, s=20, c='y', marker=_marker[j])
 
+        osf = (nosTime == nosSessions[i]) & (nosmx.side == -1) & (nosmx.poseff == 'O')
+        for j in range(len(_marker)):
+            mf = (nosmx.ordid % len(_marker) == j)
+            xl = nosmx.time[osf & mf]
+            yl = nosmx.price[osf & mf]
+            ax.scatter(xl, yl, s=20, c='g', marker=_marker[j])
+
+        fsf = (nosTime == nosSessions[i]) & (nosmx.side == -1) & (nosmx.poseff == 'T')
+        for j in range(len(_marker)):
+            mf = (nosmx.ordid % len(_marker) == j)
+            xl = nosmx.time[fsf & mf]
+            yl = nosmx.price[fsf & mf]
+            ax.scatter(xl, yl, s=20, c='k', marker=_marker[j])
+
+        cf = (ocTime == nosSessions[i])
+        for j in range(len(_marker)):
+            mf = (ocmx.ordid % len(_marker) == j)
+            xl = ocmx.time[cf & mf]
+            yl = ocmx.wmp[cf & mf]
+            ax.scatter(xl, yl, s=20, c='m', marker=_marker[j])
 
         f = ptTime == nosSessions[i]
         xl = ptmx.time[f]
         yl = ptmx.wmp[f]
         # ax.scatter(xl, yl, s=1, c='b')
-        ax.plot(xl, yl)
+        ax.plot(xl, yl, markersize=1)
 
         # plt.ylim(openPrice - spread, openPrice + spread)
         plt.xticks(rotation=270)
