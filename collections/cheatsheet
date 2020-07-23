@@ -10,6 +10,9 @@ dt转时间戳
 dt转字符串
     dt.datatime.strftime("%Y-%M-%d %H:%m:%S.%s")
 
+当前时间
+    dt.datetime.now()
+
 
 pd统计某字段各值的数量
     mx.groupby('mtype').mtype.sum()
