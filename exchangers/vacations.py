@@ -4,6 +4,10 @@
 from .util import *
 
 class vacations(object):
+
+    # 一般夜盘时间, 仅用于过程计算
+    _night_session_stime = "-21:00:00"
+
     _vacations = {
         "2020": {
             # 假期
@@ -70,7 +74,7 @@ class vacations(object):
 
 
     @classmethod
-    @timestamp2dt
+    @timestamp2dt(1)
     def is_vacation(cls, t):
         '''
             t is instance of datetime.datetime
@@ -80,7 +84,7 @@ class vacations(object):
             # 没配置
             return False
 
-        d = "%02d02d"%(t.month, t.day)
+        d = "%02d-%02d"%(t.month, t.day)
         for v in cls._vacations[y]["vacations"]:
             l = v.split("~")
             if len(l) == 1 and d == l[0]:
@@ -92,7 +96,7 @@ class vacations(object):
 
 
     @classmethod
-    @timestamp2dt
+    @timestamp2dt(1)
     def is_free(cls, t):
         if is_weekend(t) or cls.is_vacation(t):
             return True
@@ -100,7 +104,27 @@ class vacations(object):
 
 
     @classmethod
-    @timestamp2dt(2)
+    @timestamp2dt(1)
+    def nearest_time(cls, st, timeStr):
+        '''
+            st: startTime is instance of datetime.datetime
+        '''
+        t = None
+        if timeStr[0] == '-':
+            t = dt.datetime.combine(st.date(), dt.time.fromisoformat(timeStr[1:]))
+            t -= dt.timedelta(days=1)
+        else:
+            t = dt.datetime.combine(st.date(), dt.time.fromisoformat(timeStr))
+
+        while True:
+            if cls.is_vacation(t) or is_weekend(t):
+                t -= dt.timedelta(days=1)
+            else:
+                return t.timestamp()
+
+
+    @classmethod
+    @timestamp2dt(3)
     def is_session_skipped(cls, ex, session, t):
         if cls.is_free(t):
             return True
@@ -110,15 +134,22 @@ class vacations(object):
             # 没配置
             return True
         
-        d = "%02d02d"%(t.month, t.day)
+        d = "%02d-%02d"%(t.month, t.day)
         if d in cls._vacations[y][ex][session]:
             return True
+
+        if session == Session_Night:
+            nt = cls.nearest_time(t, cls._night_session_stime)
+            # 可能的夜盘开盘时间到真正的交易日之间
+            # 如果存在否周末的节假, 则该夜盘不开
+            if cls.has_vacation_inbetween(nt, t):
+                return True
 
         return False
 
 
     @classmethod
-    @timestamp2dt
+    @timestamp2dt()
     def has_vacation_inbetween(cls, t1, t2):
         '''
             t1, t2 is instance of datetime.datetime

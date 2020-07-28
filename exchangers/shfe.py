@@ -9,7 +9,7 @@ class shfe(object):
             Session_Morning1: ["09:00:00",    "10:15:00"],
             Session_Morning2: ["10:30:00",    "11:30:00"],
             Session_Noon:     ["13:30:00",    "15:00:00"],
-            Session_Night:    None
+            Session_Night:    ["-21:00:00",   "02:30:00"]
         },
 
         # 银
@@ -132,3 +132,7 @@ class shfe(object):
                 sessions.extend([s].extend(tlist))
 
         return sessions
+
+
+    def get_night_session(cls):
+        return _shfe["session"][Session_Night]
